@@ -277,7 +277,7 @@ int main() {
 	int image_width = 1280;
 	int image_height = 720;
 	auto aspect_ratio = ((double)image_width) / image_height;
-	int samples_per_pixel = 100;
+	int samples_per_pixel = 10;
 	int max_depth = 50;
 
 	// World
@@ -290,7 +290,7 @@ int main() {
 	auto aperture = 0.0;
 	color background(0, 0, 0);
 
-	switch (1) {
+	switch (3) {
 	case 1:
 		world = random_scene();
 		background = color(0.70, 0.80, 1.00);
