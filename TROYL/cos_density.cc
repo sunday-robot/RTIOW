@@ -28,7 +28,7 @@ inline vec3 random_cosine_direction() {
 }
 
 
-int cos_density_main() {
+void cos_density_main() {
     int N = 1000000;
 
     auto sum = 0.0;

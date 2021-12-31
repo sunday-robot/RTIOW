@@ -15,7 +15,7 @@
 #include <math.h>
 
 
-int sphere_plot_main() {
+void sphere_plot_main() {
     for (int i = 0; i < 2000; i++) {
         auto r1 = random_double();
         auto r2 = random_double();

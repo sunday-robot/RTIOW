@@ -21,7 +21,7 @@ inline double pdf(double x) {
     return  3*x*x/8;
 }
 
-int integrate_x_sq_main() {
+void integrate_x_sq_main() {
     int inside_circle = 0;
     int inside_circle_stratified = 0;
     int N = 1;

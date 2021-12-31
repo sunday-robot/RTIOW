@@ -21,6 +21,7 @@
 #include "moving_sphere.h"
 #include "sphere.h"
 #include "texture.h"
+#include "libBmp.h"
 
 #include <iostream>
 
@@ -66,9 +67,9 @@ hittable_list random_scene() {
 					// diffuse
 					auto albedo = color::random() * color::random();
 					sphere_material = make_shared<lambertian>(albedo);
-					auto center2 = center + vec3(0, random_double(0, .5), 0);
+					auto velocity = vec3(0, random_double(0, .5), 0);
 					world.add(make_shared<moving_sphere>(
-						center, center2, 0.0, 1.0, 0.2, sphere_material));
+						center, velocity, 0.2, sphere_material));
 				}
 				else if (choose_mat < 0.95) {
 					// metal
@@ -95,7 +96,7 @@ hittable_list random_scene() {
 	auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
 	world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
 
-	return hittable_list(make_shared<bvh_node>(world, 0.0, 1.0));
+	return hittable_list(make_shared<bvh_node>(world, 1.0));
 }
 
 
@@ -226,15 +227,15 @@ hittable_list final_scene() {
 
 	hittable_list objects;
 
-	objects.add(make_shared<bvh_node>(boxes1, 0, 1));
+	objects.add(make_shared<bvh_node>(boxes1, 1));
 
 	auto light = make_shared<diffuse_light>(color(7, 7, 7));
 	objects.add(make_shared<xz_rect>(123, 423, 147, 412, 554, light));
 
-	auto center1 = point3(400, 400, 200);
-	auto center2 = center1 + vec3(30, 0, 0);
+	auto center = point3(400, 400, 200);
+	auto velocity = vec3(30, 0, 0);
 	auto moving_sphere_material = make_shared<lambertian>(color(0.7, 0.3, 0.1));
-	objects.add(make_shared<moving_sphere>(center1, center2, 0, 1, 50, moving_sphere_material));
+	objects.add(make_shared<moving_sphere>(center, velocity, 50, moving_sphere_material));
 
 	objects.add(make_shared<sphere>(point3(260, 150, 45), 50, make_shared<dielectric>(1.5)));
 	objects.add(make_shared<sphere>(
@@ -261,7 +262,7 @@ hittable_list final_scene() {
 
 	objects.add(make_shared<translate>(
 		make_shared<rotate_y>(
-			make_shared<bvh_node>(boxes2, 0.0, 1.0), 15),
+			make_shared<bvh_node>(boxes2, 1.0), 15),
 		vec3(-100, 270, 395)
 		)
 	);
@@ -269,6 +270,9 @@ hittable_list final_scene() {
 	return objects;
 }
 
+static unsigned char convert(double value) {
+	return 255 * std::min(value, 1.0);
+}
 
 int main() {
 
@@ -290,7 +294,7 @@ int main() {
 	auto aperture = 0.0;
 	color background(0, 0, 0);
 
-	switch (3) {
+	switch (8) {
 	case 1:
 		world = random_scene();
 		background = color(0.70, 0.80, 1.00);
@@ -356,13 +360,27 @@ int main() {
 	case 8:
 		world = final_scene();
 		aspect_ratio = 1.0;
+#if false
 		image_width = 800;
 		samples_per_pixel = 10000;
+#else
+#if true
+		image_width = 1280;
+		image_height = 720;
+		samples_per_pixel = 10;
+#else
+		image_width = 128;
+		image_height = 72;
+		samples_per_pixel = 10;
+#endif
+#endif
 		lookfrom = point3(478, 278, -600);
 		lookat = point3(278, 278, 0);
 		vfov = 40.0;
 		break;
 	}
+
+	auto bvh_world = new bvh_node(world, 1.0);
 
 	// Camera
 
@@ -370,13 +388,11 @@ int main() {
 	const auto dist_to_focus = 10.0;
 	//const int image_height = static_cast<int>(image_width / aspect_ratio);
 
-	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 0.0, 1.0);
+	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 1.0);
 
 	// Render
-
-	std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-
-	for (int j = image_height - 1; j >= 0; --j) {
+	auto image = new unsigned char[image_width * 3 * image_height];
+	for (int j = 0; j < image_height; j++) {
 		std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
 		for (int i = 0; i < image_width; ++i) {
 			color pixel_color(0, 0, 0);
@@ -384,11 +400,13 @@ int main() {
 				auto u = (i + random_double()) / (image_width - 1);
 				auto v = (j + random_double()) / (image_height - 1);
 				ray r = cam.get_ray(u, v);
-				pixel_color += ray_color(r, background, world, max_depth);
+				pixel_color += ray_color(r, background, *bvh_world, max_depth);
 			}
-			write_color(std::cout, pixel_color, samples_per_pixel);
+			auto index = 3 * image_width * (image_height - 1 - j) + 3 * i;
+			image[index] = convert(pixel_color[2]);
+			image[index + 1] = convert(pixel_color[1]);
+			image[index + 2] = convert(pixel_color[0]);
 		}
 	}
-
-	std::cerr << "\nDone.\n";
+	bmpSave("scene.bmp", image, image_width, image_height);
 }

@@ -22,7 +22,7 @@ inline double pdf(const vec3& p) {
 }
 
 
-int sphere_importance_main() {
+void sphere_importance_main() {
     int N = 1000000;
     auto sum = 0.0;
     for (int i = 0; i < N; i++) {

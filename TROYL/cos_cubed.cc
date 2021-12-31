@@ -16,7 +16,7 @@
 #include <math.h>
 
 
-int cos_cubed_main() {
+void cos_cubed_main() {
     int N = 1000000;
 
     auto sum = 0.0;
