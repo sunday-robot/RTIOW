@@ -271,7 +271,7 @@ hittable_list final_scene() {
 }
 
 static unsigned char convert(double value) {
-	return 255 * std::min(value, 1.0);
+	return (unsigned char)(255 * std::min(value, 1.0));
 }
 
 int main() {
@@ -280,7 +280,6 @@ int main() {
 
 	int image_width = 1280;
 	int image_height = 720;
-	auto aspect_ratio = ((double)image_width) / image_height;
 	int samples_per_pixel = 10;
 	int max_depth = 50;
 
@@ -339,7 +338,6 @@ int main() {
 	default:
 	case 6:
 		world = cornell_box();
-		aspect_ratio = 1.0;
 		image_width = 600;
 		samples_per_pixel = 200;
 		lookfrom = point3(278, 278, -800);
@@ -349,7 +347,6 @@ int main() {
 
 	case 7:
 		world = cornell_smoke();
-		aspect_ratio = 1.0;
 		image_width = 600;
 		samples_per_pixel = 200;
 		lookfrom = point3(278, 278, -800);
@@ -359,7 +356,6 @@ int main() {
 
 	case 8:
 		world = final_scene();
-		aspect_ratio = 1.0;
 #if false
 		image_width = 800;
 		samples_per_pixel = 10000;
@@ -367,10 +363,10 @@ int main() {
 #if true
 		image_width = 1280;
 		image_height = 720;
-		samples_per_pixel = 10;
+		samples_per_pixel = 100;
 #else
-		image_width = 128;
-		image_height = 72;
+		image_width = 320;
+		image_height = 180;
 		samples_per_pixel = 10;
 #endif
 #endif
@@ -385,9 +381,9 @@ int main() {
 	// Camera
 
 	const vec3 vup(0, 1, 0);
-	const auto dist_to_focus = 10.0;
-	//const int image_height = static_cast<int>(image_width / aspect_ratio);
+	auto dist_to_focus = (lookat - lookfrom).length();
 
+	auto aspect_ratio = ((double)image_width) / image_height;
 	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 1.0);
 
 	// Render
@@ -402,6 +398,7 @@ int main() {
 				ray r = cam.get_ray(u, v);
 				pixel_color += ray_color(r, background, *bvh_world, max_depth);
 			}
+			pixel_color /= samples_per_pixel;
 			auto index = 3 * image_width * (image_height - 1 - j) + 3 * i;
 			image[index] = convert(pixel_color[2]);
 			image[index + 1] = convert(pixel_color[1]);
