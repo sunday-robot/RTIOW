@@ -25,24 +25,51 @@ public:
 		{
 			auto a = (minimum.x - r.origin.x) / r.direction.x;
 			auto b = (maximum.x - r.origin.x) / r.direction.x;
-			t_min = fmax(fmin(a, b), t_min);
-			t_max = fmin(fmax(a, b), t_max);
+			if (a > b) {
+				if (b > t_min)
+					t_min = b;
+				if (a < t_max)
+					t_max = a;
+			} else {
+				if (a > t_min)
+					t_min = a;
+				if (b < t_max)
+					t_max = b;
+			}
 			if (t_max <= t_min)
 				return false;
 		}
 		{
 			auto a = (minimum.y - r.origin.y) / r.direction.y;
 			auto b = (maximum.y - r.origin.y) / r.direction.y;
-			t_min = fmax(fmin(a, b), t_min);
-			t_max = fmin(fmax(a, b), t_max);
+			if (a > b) {
+				if (b > t_min)
+					t_min = b;
+				if (a < t_max)
+					t_max = a;
+			} else {
+				if (a > t_min)
+					t_min = a;
+				if (b < t_max)
+					t_max = b;
+			}
 			if (t_max <= t_min)
 				return false;
 		}
 		{
 			auto a = (minimum.z - r.origin.z) / r.direction.z;
 			auto b = (maximum.z - r.origin.z) / r.direction.z;
-			t_min = fmax(fmin(a, b), t_min);
-			t_max = fmin(fmax(a, b), t_max);
+			if (a > b) {
+				if (b > t_min)
+					t_min = b;
+				if (a < t_max)
+					t_max = a;
+			} else {
+				if (a > t_min)
+					t_min = a;
+				if (b < t_max)
+					t_max = b;
+			}
 			if (t_max <= t_min)
 				return false;
 		}
