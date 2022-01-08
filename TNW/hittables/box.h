@@ -1,5 +1,5 @@
-#ifndef RAY_H
-#define RAY_H
+#ifndef BOX_H
+#define BOX_H
 //==============================================================================================
 // Originally written in 2016 by Peter Shirley <ptrshrl@gmail.com>
 //
@@ -11,32 +11,23 @@
 // along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 //==============================================================================================
 
-#include "vec3.h"
+#include "hittable_list.h"
 
-
-class ray {
+class box : public hittable {
 public:
-	ray() {}
-	ray(const point3& origin, const vec3& direction)
-		: orig(origin), dir(direction), tm(0)
-	{}
+	box() {}
+	box(const vec3& p0, const vec3& p1, std::shared_ptr<material> ptr);
 
-	ray(const point3& origin, const vec3& direction, double time)
-		: orig(origin), dir(direction), tm(time)
-	{}
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
-	point3 origin() const { return orig; }
-	vec3 direction() const { return dir; }
-	double time() const { return tm; }
-
-	point3 at(double t) const {
-		return orig + t * dir;
+	virtual bool bounding_box(double exposureTime, aabb& output_box) const override {
+		output_box = aabb(box_min, box_max);
+		return true;
 	}
 
 public:
-	point3 orig;
-	vec3 dir;
-	double tm;
+	vec3 box_min;
+	vec3 box_max;
+	hittable_list sides;
 };
-
 #endif

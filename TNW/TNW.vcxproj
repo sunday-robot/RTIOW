@@ -19,18 +19,70 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aarect.h" />
-    <ClInclude Include="box.h" />
-    <ClInclude Include="bvh.h" />
-    <ClInclude Include="constant_medium.h" />
+    <ClInclude Include="aabb.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="clamp.h" />
+    <ClInclude Include="color.h" />
+    <ClInclude Include="degrees_to_radians.h" />
+    <ClInclude Include="external\stb_image.h" />
+    <ClInclude Include="hittables\box.h" />
+    <ClInclude Include="hittables\bvh.h" />
+    <ClInclude Include="constants.h" />
+    <ClInclude Include="hittables\constant_medium.h" />
     <ClInclude Include="hittable.h" />
-    <ClInclude Include="hittable_list.h" />
+    <ClInclude Include="write_color.h" />
+    <ClInclude Include="hittables\rotate_y.h" />
+    <ClInclude Include="hittables\translate.h" />
+    <ClInclude Include="hittables\hittable_list.h" />
+    <ClInclude Include="hittables\xy_rect.h" />
+    <ClInclude Include="hittables\xz_rect.h" />
+    <ClInclude Include="hittables\yz_rect.h" />
+    <ClInclude Include="hit_record.h" />
     <ClInclude Include="material.h" />
-    <ClInclude Include="moving_sphere.h" />
-    <ClInclude Include="sphere.h" />
+    <ClInclude Include="hittables\moving_sphere.h" />
+    <ClInclude Include="hittables\sphere.h" />
+    <ClInclude Include="materials\dielectric.h" />
+    <ClInclude Include="materials\diffuse_light.h" />
+    <ClInclude Include="materials\isotropic.h" />
+    <ClInclude Include="materials\lambertian.h" />
+    <ClInclude Include="materials\metal.h" />
+    <ClInclude Include="perlin.h" />
+    <ClInclude Include="random_utils.h" />
+    <ClInclude Include="ray.h" />
+    <ClInclude Include="rtw_stb_image.h" />
+    <ClInclude Include="surrounding_box.h" />
+    <ClInclude Include="texture.h" />
+    <ClInclude Include="textures\checker_texture.h" />
+    <ClInclude Include="textures\image_texture.h" />
+    <ClInclude Include="textures\noise_texture.h" />
+    <ClInclude Include="textures\solid_color.h" />
+    <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="clamp.cpp" />
+    <ClCompile Include="color.cpp" />
+    <ClCompile Include="degrees_to_radians.cpp" />
+    <ClCompile Include="hittables\box.cpp" />
+    <ClCompile Include="hittables\bvh.cpp">
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
+    </ClCompile>
+    <ClCompile Include="hittables\constant_medium.cpp" />
+    <ClCompile Include="hittables\hittable_list.cpp" />
+    <ClCompile Include="hittables\moving_sphere.cpp" />
+    <ClCompile Include="hittables\sphere.cpp" />
+    <ClCompile Include="vec3.cpp" />
+    <ClCompile Include="hit_record.cpp" />
+    <ClCompile Include="hittables\xy_rect.cpp" />
+    <ClCompile Include="hittables\xz_rect.cpp" />
+    <ClCompile Include="hittables\yz_rect.cpp" />
+    <ClCompile Include="material.cpp" />
+    <ClCompile Include="hittables\rotate_y.cpp" />
+    <ClCompile Include="hittables\translate.cpp" />
     <ClCompile Include="main.cc" />
+    <ClCompile Include="random_utils.cpp" />
+    <ClCompile Include="surrounding_box.cpp" />
+    <ClCompile Include="write_color.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libBmp\libBmp.vcxproj">
@@ -135,7 +187,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\common;$(SolutionDir)\libBmp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libBmp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,7 +202,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\common;$(SolutionDir)\libBmp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libBmp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

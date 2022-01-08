@@ -1,5 +1,5 @@
-#ifndef RAY_H
-#define RAY_H
+#ifndef BVH_H
+#define BVH_H
 //==============================================================================================
 // Originally written in 2016 by Peter Shirley <ptrshrl@gmail.com>
 //
@@ -11,32 +11,29 @@
 // along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 //==============================================================================================
 
-#include "vec3.h"
+#include <algorithm>
+#include "hittable_list.h"
 
-
-class ray {
+class bvh_node : public hittable {
 public:
-	ray() {}
-	ray(const point3& origin, const vec3& direction)
-		: orig(origin), dir(direction), tm(0)
+	bvh_node() {};
+
+	bvh_node(const hittable_list& list, double exposureTime)
+		: bvh_node(list.objects, 0, list.objects.size(), exposureTime)
 	{}
 
-	ray(const point3& origin, const vec3& direction, double time)
-		: orig(origin), dir(direction), tm(time)
-	{}
+	bvh_node(
+		const std::vector<std::shared_ptr<hittable>>& src_objects,
+		size_t start, size_t end, double exposureTime);
 
-	point3 origin() const { return orig; }
-	vec3 direction() const { return dir; }
-	double time() const { return tm; }
+	virtual bool hit(
+		const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
-	point3 at(double t) const {
-		return orig + t * dir;
-	}
+	virtual bool bounding_box(double exposureTime, aabb& output_box) const override;
 
 public:
-	point3 orig;
-	vec3 dir;
-	double tm;
+	std::shared_ptr<hittable> left;
+	std::shared_ptr<hittable> right;
+	aabb box;
 };
-
 #endif

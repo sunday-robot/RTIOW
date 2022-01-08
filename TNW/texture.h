@@ -1,5 +1,5 @@
-#ifndef RAY_H
-#define RAY_H
+#ifndef TEXTURE_H
+#define TEXTURE_H
 //==============================================================================================
 // Originally written in 2016 by Peter Shirley <ptrshrl@gmail.com>
 //
@@ -11,32 +11,10 @@
 // along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 //==============================================================================================
 
-#include "vec3.h"
+#include "color.h"
 
-
-class ray {
+class texture {
 public:
-	ray() {}
-	ray(const point3& origin, const vec3& direction)
-		: orig(origin), dir(direction), tm(0)
-	{}
-
-	ray(const point3& origin, const vec3& direction, double time)
-		: orig(origin), dir(direction), tm(time)
-	{}
-
-	point3 origin() const { return orig; }
-	vec3 direction() const { return dir; }
-	double time() const { return tm; }
-
-	point3 at(double t) const {
-		return orig + t * dir;
-	}
-
-public:
-	point3 orig;
-	vec3 dir;
-	double tm;
+	virtual color value(double u, double v, const vec3& p) const = 0;
 };
-
 #endif

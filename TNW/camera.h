@@ -11,16 +11,19 @@
 // along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 //==============================================================================================
 
-#include "rtweekend.h"
-
+//#include "rtweekend.h"
+#include "vec3.h"
+#include "ray.h"
+#include "random_utils.h"
+#include "degrees_to_radians.h"
 
 class camera {
 public:
-	camera() : camera(point3(0, 0, -1), point3(0, 0, 0), vec3(0, 1, 0), 40, 1, 0, 10) {}
+	camera() : camera(vec3(0, 0, -1), vec3(0, 0, 0), vec3(0, 1, 0), 40, 1, 0, 10) {}
 
 	camera(
-		point3 lookfrom,
-		point3 lookat,
+		vec3 lookfrom,
+		vec3 lookat,
 		vec3   vup,
 		double vfov, // vertical field-of-view in degrees
 		double aspect_ratio,
@@ -57,13 +60,12 @@ public:
 	}
 
 private:
-	point3 origin;
-	point3 lower_left_corner;
+	vec3 origin;
+	vec3 lower_left_corner;
 	vec3 horizontal;
 	vec3 vertical;
 	vec3 u, v;
 	double lens_radius;
 	double exposureTime;
 };
-
 #endif

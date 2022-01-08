@@ -1,5 +1,5 @@
-#ifndef RAY_H
-#define RAY_H
+#ifndef HITTABLE_LIST_H
+#define HITTABLE_LIST_H
 //==============================================================================================
 // Originally written in 2016 by Peter Shirley <ptrshrl@gmail.com>
 //
@@ -11,32 +11,23 @@
 // along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 //==============================================================================================
 
-#include "vec3.h"
+#include <vector>
+#include "../hittable.h"
 
-
-class ray {
+class hittable_list : public hittable {
 public:
-	ray() {}
-	ray(const point3& origin, const vec3& direction)
-		: orig(origin), dir(direction), tm(0)
-	{}
+	hittable_list() {}
+	hittable_list(std::shared_ptr<hittable> object) { add(object); }
 
-	ray(const point3& origin, const vec3& direction, double time)
-		: orig(origin), dir(direction), tm(time)
-	{}
+	void clear() { objects.clear(); }
+	void add(std::shared_ptr<hittable> object) { objects.push_back(object); }
 
-	point3 origin() const { return orig; }
-	vec3 direction() const { return dir; }
-	double time() const { return tm; }
+	virtual bool hit(
+		const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
-	point3 at(double t) const {
-		return orig + t * dir;
-	}
+	virtual bool bounding_box(double exposureTime, aabb& output_box) const override;
 
 public:
-	point3 orig;
-	vec3 dir;
-	double tm;
+	std::vector<std::shared_ptr<hittable>> objects;
 };
-
 #endif

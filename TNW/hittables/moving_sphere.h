@@ -1,5 +1,5 @@
-#ifndef RAY_H
-#define RAY_H
+#ifndef MOVING_SPHERE_H
+#define MOVING_SPHERE_H
 //==============================================================================================
 // Originally written in 2016 by Peter Shirley <ptrshrl@gmail.com>
 //
@@ -11,32 +11,27 @@
 // along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 //==============================================================================================
 
-#include "vec3.h"
+#include "../hittable.h"
 
-
-class ray {
+class moving_sphere : public hittable {
 public:
-	ray() {}
-	ray(const point3& origin, const vec3& direction)
-		: orig(origin), dir(direction), tm(0)
-	{}
+	moving_sphere() {}
+	moving_sphere(
+		vec3 c, vec3 v, double r, std::shared_ptr<material> m)
+		: center(c), velocity(v), radius(r), mat_ptr(m)
+	{};
 
-	ray(const point3& origin, const vec3& direction, double time)
-		: orig(origin), dir(direction), tm(time)
-	{}
+	virtual bool hit(
+		const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
-	point3 origin() const { return orig; }
-	vec3 direction() const { return dir; }
-	double time() const { return tm; }
+	virtual bool bounding_box(double exposureTime, aabb& output_box) const override;
 
-	point3 at(double t) const {
-		return orig + t * dir;
-	}
+	vec3 centerAt(double time) const;
 
 public:
-	point3 orig;
-	vec3 dir;
-	double tm;
+	vec3 center;
+	vec3 velocity;
+	double radius;
+	std::shared_ptr<material> mat_ptr;
 };
-
 #endif
