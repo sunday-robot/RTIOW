@@ -8,9 +8,9 @@ bool sphere::bounding_box(double exposureTime, aabb& output_box) const {
 }
 
 bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
-	vec3 oc = r.origin() - center;
-	auto a = r.direction().length_squared();
-	auto half_b = dot(oc, r.direction());
+	vec3 oc = r.origin - center;
+	auto a = r.direction.length_squared();
+	auto half_b = dot(oc, r.direction);
 	auto c = oc.length_squared() - radius * radius;
 
 	auto discriminant = half_b * half_b - a * c;

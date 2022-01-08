@@ -20,9 +20,9 @@ bool moving_sphere::bounding_box(double exposureTime, aabb& output_box) const {
 }
 
 bool moving_sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
-	vec3 oc = r.origin() - centerAt(r.time());
-	auto a = r.direction().length_squared();
-	auto half_b = dot(oc, r.direction());
+	vec3 oc = r.origin - centerAt(r.time);
+	auto a = r.direction.length_squared();
+	auto half_b = dot(oc, r.direction);
 	auto c = oc.length_squared() - radius * radius;
 
 	auto discriminant = half_b * half_b - a * c;
@@ -39,7 +39,7 @@ bool moving_sphere::hit(const ray& r, double t_min, double t_max, hit_record& re
 
 	rec.t = root;
 	rec.p = r.at(rec.t);
-	vec3 outward_normal = (rec.p - centerAt(r.time())) / radius;
+	vec3 outward_normal = (rec.p - centerAt(r.time)) / radius;
 	rec.set_face_normal(r, outward_normal);
 	rec.mat_ptr = mat_ptr;
 

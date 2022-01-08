@@ -1,12 +1,12 @@
 #include "xz_rect.h"
 
 bool xz_rect::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
-	auto t = (k - r.origin().y()) / r.direction().y();
+	auto t = (k - r.origin.y) / r.direction.y;
 	if (t < t_min || t > t_max)
 		return false;
 
-	auto x = r.origin().x() + t * r.direction().x();
-	auto z = r.origin().z() + t * r.direction().z();
+	auto x = r.origin.x + t * r.direction.x;
+	auto z = r.origin.z + t * r.direction.z;
 	if (x < x0 || x > x1 || z < z0 || z > z1)
 		return false;
 

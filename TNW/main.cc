@@ -34,6 +34,7 @@
 #include "textures/checker_texture.h"
 #include "textures/image_texture.h"
 #include "textures/noise_texture.h"
+#include "Renderer.h"
 
 using namespace std;
 
@@ -394,33 +395,12 @@ int main() {
 	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 1.0);
 
 	// Render
-	auto image = new unsigned char[image_width * 3 * image_height];
-	auto start = std::chrono::system_clock::now();
-	for (int j = 0; j < image_height; j++) {
-		std::cerr << "\rScanlines remaining: " << j << '.' << image_height << std::flush;
-		for (int i = 0; i < image_width; ++i) {
-			double red = 0;
-			double green = 0;
-			double blue = 0;
-			for (int s = 0; s < samples_per_pixel; ++s) {
-				auto u = (i + random_double()) / (image_width - 1);
-				auto v = (j + random_double()) / (image_height - 1);
-				ray r = cam.get_ray(u, v);
-				auto c = ray_color(r, background, *bvh_world, max_depth);
-				red += c.r;
-				green += c.g;
-				blue += c.b;
-			}
-			color pixel_color(red / samples_per_pixel, green / samples_per_pixel, blue / samples_per_pixel);
-			auto index = 3 * image_width * (image_height - 1 - j) + 3 * i;
-			image[index] = convert(pixel_color.b);
-			image[index + 1] = convert(pixel_color.g);
-			image[index + 2] = convert(pixel_color.r);
-		}
-	}
-	auto end = std::chrono::system_clock::now();
+	Renderer renderer(50, samples_per_pixel);
+	renderer.setWorld(bvh_world);
+	renderer.setBackground(background);
+	auto image = renderer.render(cam, image_width, image_height);
 	bmpSave("scene.bmp", image, image_width, image_height);
-	std::cerr << "time=" << std::chrono::duration_cast<std::chrono::seconds>(end - start).count() << std::endl;
+	delete[] image;
 	std::cerr << "hit enter to exit." << std::endl;
 	char dummy;
 	std::cin >> dummy;

@@ -22,13 +22,27 @@ public:
 	vec3 max() const { return maximum; }
 
 	bool hit(const ray& r, double t_min, double t_max) const {
-		for (int a = 0; a < 3; a++) {
-			auto t0 = fmin((minimum[a] - r.origin()[a]) / r.direction()[a],
-				(maximum[a] - r.origin()[a]) / r.direction()[a]);
-			auto t1 = fmax((minimum[a] - r.origin()[a]) / r.direction()[a],
-				(maximum[a] - r.origin()[a]) / r.direction()[a]);
-			t_min = fmax(t0, t_min);
-			t_max = fmin(t1, t_max);
+		{
+			auto a = (minimum.x - r.origin.x) / r.direction.x;
+			auto b = (maximum.x - r.origin.x) / r.direction.x;
+			t_min = fmax(fmin(a, b), t_min);
+			t_max = fmin(fmax(a, b), t_max);
+			if (t_max <= t_min)
+				return false;
+		}
+		{
+			auto a = (minimum.y - r.origin.y) / r.direction.y;
+			auto b = (maximum.y - r.origin.y) / r.direction.y;
+			t_min = fmax(fmin(a, b), t_min);
+			t_max = fmin(fmax(a, b), t_max);
+			if (t_max <= t_min)
+				return false;
+		}
+		{
+			auto a = (minimum.z - r.origin.z) / r.direction.z;
+			auto b = (maximum.z - r.origin.z) / r.direction.z;
+			t_min = fmax(fmin(a, b), t_min);
+			t_max = fmin(fmax(a, b), t_max);
 			if (t_max <= t_min)
 				return false;
 		}
@@ -36,16 +50,16 @@ public:
 	}
 
 	double area() const {
-		auto a = maximum.x() - minimum.x();
-		auto b = maximum.y() - minimum.y();
-		auto c = maximum.z() - minimum.z();
+		auto a = maximum.x - minimum.x;
+		auto b = maximum.y - minimum.y;
+		auto c = maximum.z - minimum.z;
 		return 2 * (a * b + b * c + c * a);
 	}
 
 	int longest_axis() const {
-		auto a = maximum.x() - minimum.x();
-		auto b = maximum.y() - minimum.y();
-		auto c = maximum.z() - minimum.z();
+		auto a = maximum.x - minimum.x;
+		auto b = maximum.y - minimum.y;
+		auto c = maximum.z - minimum.z;
 		if (a > b && a > c)
 			return 0;
 		else if (b > c)

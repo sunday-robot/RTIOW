@@ -34,6 +34,6 @@ public:
 public:
 	std::shared_ptr<hittable> left;
 	std::shared_ptr<hittable> right;
-	aabb box;
+	aabb aabb;
 };
 #endif

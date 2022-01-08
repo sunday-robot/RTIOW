@@ -13,7 +13,7 @@ public:
 		: even(std::make_shared<solid_color>(c1)), odd(std::make_shared<solid_color>(c2)) {}
 
 	virtual color value(double u, double v, const vec3& p) const override {
-		auto sines = sin(10 * p.x()) * sin(10 * p.y()) * sin(10 * p.z());
+		auto sines = sin(10 * p.x) * sin(10 * p.y) * sin(10 * p.z);
 		if (sines < 0)
 			return odd->value(u, v, p);
 		else

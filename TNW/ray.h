@@ -15,26 +15,20 @@
 
 class ray {
 public:
+	vec3 origin;
+	vec3 direction;
+	double time;
+
 	ray() {}
+
 	ray(const vec3& origin, const vec3& direction)
-		: orig(origin), dir(direction), tm(0)
-	{}
+		: origin(origin), direction(direction), time(0) {}
 
 	ray(const vec3& origin, const vec3& direction, double time)
-		: orig(origin), dir(direction), tm(time)
-	{}
-
-	vec3 origin() const { return orig; }
-	vec3 direction() const { return dir; }
-	double time() const { return tm; }
+		: origin(origin), direction(direction), time(time) {}
 
 	vec3 at(double t) const {
-		return orig + t * dir;
+		return origin + t * direction;
 	}
-
-public:
-	vec3 orig;
-	vec3 dir;
-	double tm;
 };
 #endif
