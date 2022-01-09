@@ -1,24 +1,24 @@
 #include "translate.h"
 
-bool translate::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+bool translate::hit(const ray& r, double t_min, double t_max, hit_record* rec) const {
 	ray moved_r(r.origin - offset, r.direction, r.time);
 	if (!ptr->hit(moved_r, t_min, t_max, rec))
 		return false;
 
-	rec.p += offset;
-	rec.set_face_normal(moved_r, rec.normal);
+	rec->p += offset;
+	rec->set_face_normal(moved_r, rec->normal);
 
 	return true;
 }
 
 
-bool translate::bounding_box(double exposureTime, aabb& output_box) const {
+bool translate::bounding_box(double exposureTime, aabb* output_box) const {
 	if (!ptr->bounding_box(exposureTime, output_box))
 		return false;
 
-	output_box = aabb(
-		output_box.min() + offset,
-		output_box.max() + offset);
+	*output_box = aabb(
+		output_box->min() + offset,
+		output_box->max() + offset);
 
 	return true;
 }

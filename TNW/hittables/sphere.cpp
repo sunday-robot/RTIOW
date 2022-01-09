@@ -1,13 +1,13 @@
 #include "sphere.h"
 
-bool sphere::bounding_box(double exposureTime, aabb& output_box) const {
-	output_box = aabb(
+bool sphere::bounding_box(double exposureTime, aabb* output_box) const {
+	*output_box = aabb(
 		center - vec3(radius, radius, radius),
 		center + vec3(radius, radius, radius));
 	return true;
 }
 
-bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+bool sphere::hit(const ray& r, double t_min, double t_max, hit_record* rec) const {
 	vec3 oc = r.origin - center;
 	auto a = r.direction.length_squared();
 	auto half_b = dot(oc, r.direction);
@@ -25,12 +25,14 @@ bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) cons
 			return false;
 	}
 
-	rec.t = root;
-	rec.p = r.at(rec.t);
-	vec3 outward_normal = (rec.p - center) / radius;
-	rec.set_face_normal(r, outward_normal);
-	get_sphere_uv(outward_normal, rec.u, rec.v);
-	rec.mat_ptr = mat_ptr;
+	auto p = r.at(root);
+	vec3 outward_normal = (p - center) / radius;
+
+	rec->t = root;
+	rec->p = p;
+	rec->set_face_normal(r, outward_normal);
+	get_sphere_uv(outward_normal, &rec->u, &rec->v);
+	rec->mat_ptr = mat_ptr;
 
 	return true;
 }

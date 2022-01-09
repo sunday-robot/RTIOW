@@ -18,10 +18,10 @@ public:
 	box() {}
 	box(const vec3& p0, const vec3& p1, std::shared_ptr<material> ptr);
 
-	virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record* rec) const override;
 
-	virtual bool bounding_box(double exposureTime, aabb& output_box) const override {
-		output_box = aabb(box_min, box_max);
+	virtual bool bounding_box(double exposureTime, aabb* output_box) const override {
+		*output_box = aabb(box_min, box_max);
 		return true;
 	}
 

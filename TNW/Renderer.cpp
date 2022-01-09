@@ -1,6 +1,7 @@
 #include "Renderer.h"
 #include <chrono>
 #include <iostream>
+#include <omp.h>
 #include "ray.h"
 #include "random_utils.h"
 #include "hittable.h"
@@ -16,7 +17,7 @@ color Renderer::ray_color(const ray& r, int depth) {
 		return color(0, 0, 0);
 
 	// If the ray hits nothing, return the background color.
-	if (!world->hit(r, 0.001, infinity, rec))
+	if (!world->hit(r, 0.001, infinity, &rec))
 		return backgroundColor;
 
 	ray scattered;
@@ -33,7 +34,7 @@ static unsigned char convert(double value) {
 	return (unsigned char)(255 * std::min(value, 1.0));
 }
 
-unsigned char* Renderer::render(const camera &camera, int image_width, int image_height)
+unsigned char* Renderer::render(const camera& camera, int image_width, int image_height)
 {
 	auto image = new unsigned char[image_width * 3 * image_height];
 	auto start = std::chrono::system_clock::now();
@@ -43,6 +44,7 @@ unsigned char* Renderer::render(const camera &camera, int image_width, int image
 			double red = 0;
 			double green = 0;
 			double blue = 0;
+#pragma omp parallel for
 			for (int s = 0; s < samplesPerPixel; ++s) {
 				auto u = (i + random_double()) / (image_width - 1);
 				auto v = (j + random_double()) / (image_height - 1);

@@ -9,7 +9,7 @@ rotate_y::rotate_y(std::shared_ptr<hittable> p, double angle) : ptr(p) {
 	auto radians = degrees_to_radians(angle);
 	sin_theta = sin(radians);
 	cos_theta = cos(radians);
-	hasbox = ptr->bounding_box(1, bbox);
+	hasbox = ptr->bounding_box(1, &bbox);
 
 	vec3 min(infinity, infinity, infinity);
 	vec3 max(-infinity, -infinity, -infinity);
@@ -45,7 +45,7 @@ rotate_y::rotate_y(std::shared_ptr<hittable> p, double angle) : ptr(p) {
 	bbox = aabb(min, max);
 }
 
-bool rotate_y::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+bool rotate_y::hit(const ray& r, double t_min, double t_max, hit_record* rec) const {
 	auto origin = r.origin;
 	auto direction = r.direction;
 
@@ -60,17 +60,17 @@ bool rotate_y::hit(const ray& r, double t_min, double t_max, hit_record& rec) co
 	if (!ptr->hit(rotated_r, t_min, t_max, rec))
 		return false;
 
-	auto p = rec.p;
-	auto normal = rec.normal;
+	auto normal = rec->normal;
 
-	p.x = cos_theta * rec.p.x + sin_theta * rec.p.z;
-	p.z = -sin_theta * rec.p.x + cos_theta * rec.p.z;
+	auto px = cos_theta * rec->p.x + sin_theta * rec->p.z;
+	auto pz = -sin_theta * rec->p.x + cos_theta * rec->p.z;
 
-	normal.x = cos_theta * rec.normal.x + sin_theta * rec.normal.z;
-	normal.z = -sin_theta * rec.normal.x + cos_theta * rec.normal.z;
+	normal.x = cos_theta * rec->normal.x + sin_theta * rec->normal.z;
+	normal.z = -sin_theta * rec->normal.x + cos_theta * rec->normal.z;
 
-	rec.p = p;
-	rec.set_face_normal(rotated_r, normal);
+	rec->p.x = px;
+	rec->p.z = pz;
+	rec->set_face_normal(rotated_r, normal);
 
 	return true;
 }

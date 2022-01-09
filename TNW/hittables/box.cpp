@@ -18,6 +18,6 @@ box::box(const vec3& p0, const vec3& p1, std::shared_ptr<material> ptr) {
 	sides.add(std::make_shared<yz_rect>(p0.y, p1.y, p0.z, p1.z, p0.x, ptr));
 }
 
-bool box::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+bool box::hit(const ray& r, double t_min, double t_max, hit_record* rec) const {
 	return sides.hit(r, t_min, t_max, rec);
 }

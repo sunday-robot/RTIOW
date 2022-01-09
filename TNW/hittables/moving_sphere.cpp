@@ -6,7 +6,7 @@ vec3 moving_sphere::centerAt(double time) const {
 	return center + velocity * time;
 }
 
-bool moving_sphere::bounding_box(double exposureTime, aabb& output_box) const {
+bool moving_sphere::bounding_box(double exposureTime, aabb* output_box) const {
 	auto c0 = centerAt(-exposureTime / 2);
 	auto c1 = centerAt(exposureTime / 2);
 	aabb box0(
@@ -15,11 +15,11 @@ bool moving_sphere::bounding_box(double exposureTime, aabb& output_box) const {
 	aabb box1(
 		c1 - vec3(radius, radius, radius),
 		c1 + vec3(radius, radius, radius));
-	output_box = surrounding_box(box0, box1);
+	*output_box = surrounding_box(box0, box1);
 	return true;
 }
 
-bool moving_sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {
+bool moving_sphere::hit(const ray& r, double t_min, double t_max, hit_record* rec) const {
 	vec3 oc = r.origin - centerAt(r.time);
 	auto a = r.direction.length_squared();
 	auto half_b = dot(oc, r.direction);
@@ -37,11 +37,13 @@ bool moving_sphere::hit(const ray& r, double t_min, double t_max, hit_record& re
 			return false;
 	}
 
-	rec.t = root;
-	rec.p = r.at(rec.t);
-	vec3 outward_normal = (rec.p - centerAt(r.time)) / radius;
-	rec.set_face_normal(r, outward_normal);
-	rec.mat_ptr = mat_ptr;
+	auto p = r.at(root);
+	vec3 outward_normal = (p - centerAt(r.time)) / radius;
+
+	rec->t = root;
+	rec->p = p;
+	rec->set_face_normal(r, outward_normal);
+	rec->mat_ptr = mat_ptr;
 
 	return true;
 }

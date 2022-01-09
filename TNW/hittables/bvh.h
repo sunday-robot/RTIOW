@@ -27,9 +27,9 @@ public:
 		size_t start, size_t end, double exposureTime);
 
 	virtual bool hit(
-		const ray& r, double t_min, double t_max, hit_record& rec) const override;
+		const ray& r, double t_min, double t_max, hit_record* rec) const override;
 
-	virtual bool bounding_box(double exposureTime, aabb& output_box) const override;
+	virtual bool bounding_box(double exposureTime, aabb* output_box) const override;
 
 public:
 	std::shared_ptr<hittable> left;
