@@ -39,7 +39,7 @@ unsigned char* Renderer::render(const camera& camera, int image_width, int image
 	auto image = new unsigned char[image_width * 3 * image_height];
 	auto start = std::chrono::system_clock::now();
 	for (int j = 0; j < image_height; j++) {
-		std::cerr << "\rScanlines remaining: " << j << '.' << image_height << std::flush;
+		std::cerr << j << std::endl;
 		for (int i = 0; i < image_width; ++i) {
 			double red = 0;
 			double green = 0;

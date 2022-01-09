@@ -402,6 +402,5 @@ int main() {
 	bmpSave("scene.bmp", image, image_width, image_height);
 	delete[] image;
 	std::cerr << "hit enter to exit." << std::endl;
-	char dummy;
-	std::cin >> dummy;
+	std::cin.get();
 }
