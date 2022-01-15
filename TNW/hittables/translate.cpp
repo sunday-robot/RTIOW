@@ -11,8 +11,7 @@ bool translate::hit(const ray& r, double t_min, double t_max, hit_record* rec) c
 	return true;
 }
 
-
 aabb translate::bounding_box(double exposureTime) const {
 	auto tmp = ptr->bounding_box(exposureTime);
-	return aabb(tmp.minimum + offset, tmp.maximum + offset);
+	return aabb(tmp.min() + offset, tmp.max() + offset);
 }

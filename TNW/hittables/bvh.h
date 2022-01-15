@@ -31,7 +31,7 @@ public:
 
 	virtual aabb bounding_box(double exposureTime) const override;
 
-public:
+private:
 	std::shared_ptr<hittable> left;
 	std::shared_ptr<hittable> right;
 	aabb aabb;

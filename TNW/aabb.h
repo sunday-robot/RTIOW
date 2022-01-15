@@ -16,7 +16,7 @@
 class aabb {
 public:
 	aabb() {}
-	aabb(const vec3& a, const vec3& b) { minimum = a; maximum = b; }
+	aabb(const vec3& a, const vec3& b) : minimum(a), maximum(b) {}
 
 	vec3 min() const { return minimum; }
 	vec3 max() const { return maximum; }
@@ -95,7 +95,7 @@ public:
 			return 2;
 	}
 
-public:
+private:
 	vec3 minimum;
 	vec3 maximum;
 };
