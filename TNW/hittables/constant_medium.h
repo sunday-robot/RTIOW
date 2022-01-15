@@ -32,8 +32,8 @@ public:
 	virtual bool hit(
 		const ray& r, double t_min, double t_max, hit_record* rec) const override;
 
-	virtual bool bounding_box(double exposureTime, aabb* output_box) const override {
-		return boundary->bounding_box(exposureTime, output_box);
+	virtual aabb bounding_box(double exposureTime) const override {
+		return boundary->bounding_box(exposureTime);
 	}
 
 public:

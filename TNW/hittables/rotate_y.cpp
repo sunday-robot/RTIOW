@@ -9,7 +9,7 @@ rotate_y::rotate_y(std::shared_ptr<hittable> p, double angle) : ptr(p) {
 	auto radians = degrees_to_radians(angle);
 	sin_theta = sin(radians);
 	cos_theta = cos(radians);
-	hasbox = ptr->bounding_box(1, &bbox);
+	bbox = ptr->bounding_box(1);
 
 	vec3 min(infinity, infinity, infinity);
 	vec3 max(-infinity, -infinity, -infinity);

@@ -3,26 +3,20 @@
 #include "../random_utils.h"
 
 bool box_x_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b) {
-	aabb box_a;
-	aabb box_b;
-	a->bounding_box(0, &box_a);
-	b->bounding_box(0, &box_b);
+	aabb box_a = a->bounding_box(0);
+	aabb box_b = b->bounding_box(0);
 	return box_a.min().x < box_b.min().x;
 }
 
 bool box_y_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b) {
-	aabb box_a;
-	aabb box_b;
-	a->bounding_box(0, &box_a);
-	b->bounding_box(0, &box_b);
+	aabb box_a = a->bounding_box(0);
+	aabb box_b = b->bounding_box(0);
 	return box_a.min().y < box_b.min().y;
 }
 
 bool box_z_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b) {
-	aabb box_a;
-	aabb box_b;
-	a->bounding_box(0, &box_a);
-	b->bounding_box(0, &box_b);
+	aabb box_a = a->bounding_box(0);
+	aabb box_b = b->bounding_box(0);
 	return box_a.min().z < box_b.min().z;
 }
 
@@ -58,13 +52,13 @@ bvh_node::bvh_node(
 		right = std::make_shared<bvh_node>(objects, mid, end, exposureTime);
 	}
 
-	::aabb box_left, box_right;
-
-	if (!left->bounding_box(exposureTime, &box_left)
-		|| (right != 0 && !right->bounding_box(exposureTime, &box_right)))
-		std::cerr << "No bounding box in bvh_node constructor.\n";
-
-	aabb = surrounding_box(box_left, box_right);
+	if (right == 0) {
+		aabb = left->bounding_box(exposureTime);
+	} else {
+		aabb = surrounding_box(
+			left->bounding_box(exposureTime),
+			right->bounding_box(exposureTime));
+	}
 }
 
 bool bvh_node::hit(const ray& r, double t_min, double t_max, hit_record* rec) const {
@@ -82,7 +76,6 @@ bool bvh_node::hit(const ray& r, double t_min, double t_max, hit_record* rec) co
 	}
 }
 
-bool bvh_node::bounding_box(double exposureTime, ::aabb* output_box) const {
-	*output_box = aabb;
-	return true;
+aabb bvh_node::bounding_box(double exposureTime) const {
+	return aabb;
 }

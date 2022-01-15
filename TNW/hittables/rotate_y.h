@@ -10,15 +10,13 @@ public:
 	virtual bool hit(
 		const ray& r, double t_min, double t_max, hit_record* rec) const override;
 
-	virtual bool bounding_box(double exposureTime, aabb* output_box) const override {
-		*output_box = bbox;
-		return hasbox;
+	virtual aabb bounding_box(double exposureTime) const override {
+		return bbox;
 	}
 
 public:
 	std::shared_ptr<hittable> ptr;
 	double sin_theta;
 	double cos_theta;
-	bool hasbox;
 	aabb bbox;
 };

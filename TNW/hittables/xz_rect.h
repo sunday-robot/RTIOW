@@ -11,11 +11,10 @@ public:
 
 	virtual bool hit(const ray& r, double t_min, double t_max, hit_record* rec) const override;
 
-	virtual bool bounding_box(double exposureTime, aabb* output_box) const override {
+	virtual aabb bounding_box(double exposureTime) const override {
 		// The bounding box must have non-zero width in each dimension, so pad the Y
 		// dimension a small amount.
-		*output_box = aabb(vec3(x0, k - 0.0001, z0), vec3(x1, k + 0.0001, z1));
-		return true;
+		return  aabb(vec3(x0, k - 0.0001, z0), vec3(x1, k + 0.0001, z1));
 	}
 
 public:

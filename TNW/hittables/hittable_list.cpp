@@ -17,23 +17,11 @@ bool hittable_list::hit(const ray& r, double t_min, double t_max, hit_record* re
 	return hit_anything;
 }
 
-bool hittable_list::bounding_box(double exposureTime, aabb* output_box) const {
-	if (objects.empty())
-		return false;
-
-	aabb temp_box;
-	bool first_box = true;
-
-	for (const auto& object : objects) {
-		if (!object->bounding_box(exposureTime, &temp_box))
-			return false;
-		if (first_box) {
-			*output_box = temp_box;
-			first_box = false;
-		} else {
-			*output_box = surrounding_box(*output_box, temp_box);
-		}
+aabb hittable_list::bounding_box(double exposureTime) const {
+	auto output_box = objects[0]->bounding_box(exposureTime);
+	for (auto i = 1; i < objects.size(); i++) {
+		auto temp_box = objects[i]->bounding_box(exposureTime);
+		output_box = surrounding_box(output_box, temp_box);
 	}
-
-	return true;
+	return output_box;
 }

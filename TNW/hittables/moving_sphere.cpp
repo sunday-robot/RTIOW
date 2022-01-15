@@ -6,7 +6,7 @@ vec3 moving_sphere::centerAt(double time) const {
 	return center + velocity * time;
 }
 
-bool moving_sphere::bounding_box(double exposureTime, aabb* output_box) const {
+aabb moving_sphere::bounding_box(double exposureTime) const {
 	auto c0 = centerAt(-exposureTime / 2);
 	auto c1 = centerAt(exposureTime / 2);
 	aabb box0(
@@ -15,8 +15,7 @@ bool moving_sphere::bounding_box(double exposureTime, aabb* output_box) const {
 	aabb box1(
 		c1 - vec3(radius, radius, radius),
 		c1 + vec3(radius, radius, radius));
-	*output_box = surrounding_box(box0, box1);
-	return true;
+	return surrounding_box(box0, box1);
 }
 
 bool moving_sphere::hit(const ray& r, double t_min, double t_max, hit_record* rec) const {
