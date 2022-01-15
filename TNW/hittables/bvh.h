@@ -19,7 +19,11 @@ public:
 	bvh_node() {};
 
 	bvh_node(const hittable_list& list, double exposureTime)
-		: bvh_node(list.objects, 0, list.objects.size(), exposureTime)
+		: bvh_node(list.objects, exposureTime)
+	{}
+
+	bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, double exposureTime)
+		: bvh_node(src_objects, 0, src_objects.size(), exposureTime)
 	{}
 
 	bvh_node(
