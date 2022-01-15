@@ -79,3 +79,15 @@ bool bvh_node::hit(const ray& r, double t_min, double t_max, hit_record* rec) co
 aabb bvh_node::bounding_box(double exposureTime) const {
 	return aabb;
 }
+
+void bvh_node::print(std::string indent) const {
+	std::cout << indent << "aabb = " << aabb.to_string() << std::endl;
+	if (right == 0)
+		left->print(indent);
+	else {
+		std::cout << indent << "left:" << std::endl;
+		left->print(indent + "  ");
+		std::cout << indent << "right:" << std::endl;
+		right->print(indent + "  ");
+	}
+}

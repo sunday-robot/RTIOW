@@ -46,3 +46,8 @@ bool moving_sphere::hit(const ray& r, double t_min, double t_max, hit_record* re
 
 	return true;
 }
+
+void moving_sphere::print(std::string indent) const
+{
+	std::cout << indent << "(moving_sphere)" << std::endl;
+}

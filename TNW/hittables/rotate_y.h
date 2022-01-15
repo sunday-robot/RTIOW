@@ -14,6 +14,8 @@ public:
 		return bbox;
 	}
 
+	virtual void print(std::string indent = "") const override;
+
 public:
 	std::shared_ptr<hittable> ptr;
 	double sin_theta;

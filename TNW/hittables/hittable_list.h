@@ -27,6 +27,8 @@ public:
 
 	virtual aabb bounding_box(double exposureTime) const override;
 
+	virtual void print(std::string indent = "") const override;
+
 public:
 	std::vector<std::shared_ptr<hittable>> objects;
 };

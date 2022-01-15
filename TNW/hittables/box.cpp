@@ -21,3 +21,8 @@ box::box(const vec3& p0, const vec3& p1, std::shared_ptr<material> ptr) {
 bool box::hit(const ray& r, double t_min, double t_max, hit_record* rec) const {
 	return sides.hit(r, t_min, t_max, rec);
 }
+
+void box::print(std::string indent) const
+{
+	std::cout << indent << "(box)" << std::endl;
+}

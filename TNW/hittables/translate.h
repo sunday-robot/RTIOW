@@ -11,6 +11,8 @@ public:
 
 	virtual aabb bounding_box(double exposureTime) const override;
 
+	virtual void print(std::string indent = "") const override;
+
 public:
 	std::shared_ptr<hittable> ptr;
 	vec3 offset;

@@ -20,5 +20,7 @@ public:
 	
 	// レンダリング前に一度呼ばれるだけのものなので、inline化などの考慮は不要
 	virtual aabb bounding_box(double exposureTime) const = 0;
+
+	virtual void print(std::string indent = "") const = 0;
 };
 #endif

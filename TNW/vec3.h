@@ -58,6 +58,8 @@ public:
 		const auto s = 1e-8;
 		return (fabs(x) < s) && (fabs(y) < s) && (fabs(z) < s);
 	}
+
+	std::string to_string() const;
 };
 
 // vec3 Utility Functions

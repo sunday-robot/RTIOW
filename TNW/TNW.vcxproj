@@ -60,6 +60,7 @@
     <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="aabb.cpp" />
     <ClCompile Include="clamp.cpp" />
     <ClCompile Include="color.cpp" />
     <ClCompile Include="degrees_to_radians.cpp" />

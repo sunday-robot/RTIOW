@@ -74,3 +74,8 @@ bool rotate_y::hit(const ray& r, double t_min, double t_max, hit_record* rec) co
 
 	return true;
 }
+
+void rotate_y::print(std::string indent) const
+{
+	std::cout << indent << "(rotate_y)" << std::endl;
+}

@@ -25,3 +25,8 @@ aabb hittable_list::bounding_box(double exposureTime) const {
 	}
 	return output_box;
 }
+
+void hittable_list::print(std::string indent) const
+{
+	std::cout << indent << "(hittable_list)" << std::endl;
+}

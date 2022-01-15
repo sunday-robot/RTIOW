@@ -24,6 +24,8 @@ public:
 		return aabb(box_min, box_max);
 	}
 
+	virtual void print(std::string indent = "") const override;
+
 public:
 	vec3 box_min;
 	vec3 box_max;

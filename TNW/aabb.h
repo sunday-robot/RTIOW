@@ -95,6 +95,8 @@ public:
 			return 2;
 	}
 
+	std::string to_string() const;
+
 private:
 	vec3 minimum;
 	vec3 maximum;

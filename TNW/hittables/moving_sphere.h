@@ -26,6 +26,8 @@ public:
 
 	virtual aabb bounding_box(double exposureTime) const override;
 
+	virtual void print(std::string indent = "") const override;
+
 	vec3 centerAt(double time) const;
 
 public:

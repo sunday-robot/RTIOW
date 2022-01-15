@@ -35,3 +35,8 @@ bool sphere::hit(const ray& r, double t_min, double t_max, hit_record* rec) cons
 
 	return true;
 }
+
+void sphere::print(std::string indent) const
+{
+	std::cout << indent << "(sphere)" << std::endl;
+}

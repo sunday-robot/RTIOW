@@ -15,3 +15,8 @@ aabb translate::bounding_box(double exposureTime) const {
 	auto tmp = ptr->bounding_box(exposureTime);
 	return aabb(tmp.min() + offset, tmp.max() + offset);
 }
+
+void translate::print(std::string indent) const
+{
+	std::cout << indent << "(translate)" << std::endl;
+}

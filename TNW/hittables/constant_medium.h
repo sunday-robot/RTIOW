@@ -36,6 +36,8 @@ public:
 		return boundary->bounding_box(exposureTime);
 	}
 
+	virtual void print(std::string indent = "") const override;
+
 public:
 	std::shared_ptr<hittable> boundary;
 	std::shared_ptr<material> phase_function;

@@ -356,6 +356,7 @@ int main() {
 	}
 
 	auto bvh_world = new bvh_node(world, 1.0);
+	bvh_world->print();
 
 	// Camera
 

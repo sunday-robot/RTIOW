@@ -35,6 +35,8 @@ public:
 
 	virtual aabb bounding_box(double exposureTime) const override;
 
+	virtual void print(std::string indent = "") const override;
+
 private:
 	std::shared_ptr<hittable> left;
 	std::shared_ptr<hittable> right;

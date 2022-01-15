@@ -20,3 +20,8 @@ bool xz_rect::hit(const ray& r, double t_min, double t_max, hit_record* rec) con
 
 	return true;
 }
+
+void xz_rect::print(std::string indent) const
+{
+	std::cout << indent << "(xz_rect)" << std::endl;
+}

@@ -17,6 +17,8 @@ public:
 		return  aabb(vec3(x0, y0, k - 0.0001), vec3(x1, y1, k + 0.0001));
 	}
 
+	virtual void print(std::string indent = "") const override;
+
 public:
 	std::shared_ptr<material> mp;
 	double x0, x1, y0, y1, k;
