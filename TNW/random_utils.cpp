@@ -12,7 +12,7 @@ double random_double(double min, double max) {
 
 int random_int(int min, int max) {
 	// Returns a random integer in [min,max].
-	return static_cast<int>(random_double(min, max + 1));
+	return rand() % (max + 1 - min) + min;
 }
 
 vec3 randomVec3(double min, double max) {
