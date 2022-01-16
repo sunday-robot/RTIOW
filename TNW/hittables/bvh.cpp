@@ -21,40 +21,22 @@ bool box_z_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hitt
 }
 
 bvh_node::bvh_node(
-	const std::vector<std::shared_ptr<hittable>>& src_objects,
+	std::vector<std::shared_ptr<hittable>>* src_objects,
 	size_t start, size_t end, double exposureTime
 ) {
-	auto objects = src_objects; // Create a modifiable array of the source scene objects
-
-	int axis = random_int(0, 2);
-	auto comparator = (axis == 0) ? box_x_compare
-		: (axis == 1) ? box_y_compare
-		: box_z_compare;
-
-	size_t object_span = end - start;
-
-	if (object_span == 1) {
-		left = objects[start];
+	if (end - start == 1) {
+		left = (*src_objects)[start];
 		right = 0;
-	} else if (object_span == 2) {
-		if (comparator(objects[start], objects[start + 1])) {
-			left = objects[start];
-			right = objects[start + 1];
-		} else {
-			left = objects[start + 1];
-			right = objects[start];
-		}
-	} else {
-		std::sort(objects.begin() + start, objects.begin() + end, comparator);
-
-		auto mid = start + object_span / 2;
-		left = std::make_shared<bvh_node>(objects, start, mid, exposureTime);
-		right = std::make_shared<bvh_node>(objects, mid, end, exposureTime);
-	}
-
-	if (right == 0) {
 		aabb = left->bounding_box(exposureTime);
 	} else {
+		auto axis = random_int(0, 2);
+		auto comparator = (axis == 0) ? box_x_compare
+			: (axis == 1) ? box_y_compare
+			: box_z_compare;
+		std::sort(src_objects->begin() + start, src_objects->begin() + end, comparator);
+		auto mid = (start + end) / 2;
+		left = std::make_shared<bvh_node>(src_objects, start, mid, exposureTime);
+		right = std::make_shared<bvh_node>(src_objects, mid, end, exposureTime);
 		aabb = surrounding_box(
 			left->bounding_box(exposureTime),
 			right->bounding_box(exposureTime));

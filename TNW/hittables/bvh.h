@@ -22,12 +22,12 @@ public:
 		: bvh_node(list.objects, exposureTime)
 	{}
 
-	bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, double exposureTime)
-		: bvh_node(src_objects, 0, src_objects.size(), exposureTime)
+	bvh_node(std::vector<std::shared_ptr<hittable>> src_objects, double exposureTime)
+		: bvh_node(&src_objects, 0, src_objects.size(), exposureTime)
 	{}
 
 	bvh_node(
-		const std::vector<std::shared_ptr<hittable>>& src_objects,
+		std::vector<std::shared_ptr<hittable>>* src_objects,
 		size_t start, size_t end, double exposureTime);
 
 	virtual bool hit(
