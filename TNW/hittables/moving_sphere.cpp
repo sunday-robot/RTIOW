@@ -1,5 +1,5 @@
 #include "moving_sphere.h"
-
+#include <string>
 #include "../surrounding_box.h"
 
 vec3 moving_sphere::centerAt(double time) const {
@@ -49,5 +49,5 @@ bool moving_sphere::hit(const ray& r, double t_min, double t_max, hit_record* re
 
 void moving_sphere::print(std::string indent) const
 {
-	std::cout << indent << "(moving_sphere)" << std::endl;
+	std::cout << indent << "moving_sphere:" << this->center.to_string() << ", " << std::to_string(radius) << ", " << velocity.to_string() << std::endl;
 }

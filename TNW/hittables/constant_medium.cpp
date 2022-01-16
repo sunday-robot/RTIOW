@@ -50,5 +50,6 @@ bool constant_medium::hit(const ray& r, double t_min, double t_max, hit_record* 
 
 void constant_medium::print(std::string indent) const
 {
-	std::cout << indent << "(constant_medium)" << std::endl;
+	std::cout << indent << "constant_medium:" << std::endl;
+	boundary->print(indent);
 }

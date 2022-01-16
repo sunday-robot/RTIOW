@@ -24,5 +24,5 @@ bool box::hit(const ray& r, double t_min, double t_max, hit_record* rec) const {
 
 void box::print(std::string indent) const
 {
-	std::cout << indent << "(box)" << std::endl;
+	std::cout << indent << "box:" << box_min.to_string() << "-" << box_max.to_string() <<  std::endl;
 }

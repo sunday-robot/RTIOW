@@ -1,4 +1,5 @@
 #include "sphere.h"
+#include <string>
 
 aabb sphere::bounding_box(double exposureTime) const {
 	return aabb(
@@ -38,5 +39,5 @@ bool sphere::hit(const ray& r, double t_min, double t_max, hit_record* rec) cons
 
 void sphere::print(std::string indent) const
 {
-	std::cout << indent << "(sphere)" << std::endl;
+	std::cout << indent << "sphere:" << this->center.to_string() << ", " << std::to_string(radius) << std::endl;
 }
