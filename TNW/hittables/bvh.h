@@ -11,35 +11,46 @@
 // along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 //==============================================================================================
 
-#include <algorithm>
-#include "hittable_list.h"
+#include "../hittable.h"
+#include <vector>
 
-class bvh_node : public hittable {
+class Bvh : public hittable {
+protected:
+	const aabb aabb;
 public:
-	bvh_node() {};
+	Bvh(::aabb aabb) : aabb(aabb) {}
+	virtual ::aabb bounding_box(double exposureTime) const override {
+		return aabb;
+	}
+};
 
-	bvh_node(const hittable_list& list, double exposureTime)
-		: bvh_node(list.objects, exposureTime)
+class BvhNode : public Bvh {
+	const std::shared_ptr<Bvh> left;
+	const std::shared_ptr<Bvh> right;
+public:
+	BvhNode(::aabb aabb, std::shared_ptr<Bvh> left, std::shared_ptr<Bvh> right)
+		: Bvh(aabb),
+		left(left),
+		right(right)
 	{}
 
-	bvh_node(std::vector<std::shared_ptr<hittable>> src_objects, double exposureTime)
-		: bvh_node(&src_objects, 0, src_objects.size(), exposureTime)
-	{}
-
-	bvh_node(
-		std::vector<std::shared_ptr<hittable>>* src_objects,
-		size_t start, size_t end, double exposureTime);
-
-	virtual bool hit(
-		const ray& r, double t_min, double t_max, hit_record* rec) const override;
-
-	virtual aabb bounding_box(double exposureTime) const override;
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record* rec) const override;
 
 	virtual void print(std::string indent = "") const override;
-
-private:
-	std::shared_ptr<hittable> left;
-	std::shared_ptr<hittable> right;
-	aabb aabb;
 };
+
+class BvhLeaf : public Bvh {
+	const std::shared_ptr<hittable> data;
+public:
+	BvhLeaf(::aabb aabb, std::shared_ptr<hittable> data)
+		: Bvh(aabb),
+		data(data)
+	{}
+
+	virtual bool hit(const ray& r, double t_min, double t_max, hit_record* rec) const override;
+
+	virtual void print(std::string indent = "") const override;
+};
+
+std::shared_ptr<Bvh> createBvhTree(std::vector<std::shared_ptr<hittable>> src_objects, double exposureTime);
 #endif

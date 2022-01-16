@@ -242,7 +242,7 @@ std::vector<std::shared_ptr<hittable>> final_scene() {
 		}
 		objects.push_back(make_shared<translate>(
 			make_shared<rotate_y>(
-				make_shared<bvh_node>(boxes2, 1.0), 15),
+				createBvhTree(boxes2, 1.0), 15),
 			vec3(-100, 270, 395)
 			)
 		);
@@ -355,7 +355,7 @@ int main() {
 		break;
 	}
 
-	auto bvh_world = new bvh_node(world, 1.0);
+	auto bvh_world = createBvhTree(world, 1.0);
 	bvh_world->print();
 
 	// Camera
@@ -368,7 +368,7 @@ int main() {
 
 	// Render
 	Renderer renderer(50, samples_per_pixel);
-	renderer.setWorld(bvh_world);
+	renderer.setWorld(bvh_world.get());
 	renderer.setBackground(background);
 	auto image = renderer.render(cam, image_width, image_height);
 	bmpSave("scene.bmp", image, image_width, image_height);
