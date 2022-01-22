@@ -111,7 +111,7 @@ std::vector<std::shared_ptr<hittable>> two_perlin_spheres() {
 std::vector<std::shared_ptr<hittable>> earth() {
 	std::vector<std::shared_ptr<hittable>> objects;
 
-	auto earth_texture = make_shared<image_texture>("earthmap.jpg");
+	auto earth_texture = make_shared<image_texture>("earthmap.bmp");
 	auto earth_surface = make_shared<lambertian>(earth_texture);
 	auto globe = make_shared<sphere>(vec3(0, 0, 0), 2, earth_surface);
 	objects.push_back(globe);
@@ -228,7 +228,7 @@ std::vector<std::shared_ptr<hittable>> final_scene() {
 	boundary = make_shared<sphere>(vec3(0, 0, 0), 5000, make_shared<dielectric>(1.5));
 	objects.push_back(make_shared<constant_medium>(boundary, .0001, color(1, 1, 1)));
 
-	auto emat = make_shared<lambertian>(make_shared<image_texture>("earthmap.jpg"));
+	auto emat = make_shared<lambertian>(make_shared<image_texture>("earthmap.bmp"));
 	objects.push_back(make_shared<sphere>(vec3(400, 200, 400), 100, emat));
 	auto pertext = make_shared<noise_texture>(0.1);
 	objects.push_back(make_shared<sphere>(vec3(220, 280, 300), 80, make_shared<lambertian>(pertext)));

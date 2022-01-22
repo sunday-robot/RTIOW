@@ -1,33 +1,26 @@
 #pragma once
 
 #include "../texture.h"
-#include "../rtw_stb_image.h"
+#include "libBmp.h"
 #include "../vec3.h"
 #include "../clamp.h"
 
 class image_texture : public texture {
 public:
-	const static int bytes_per_pixel = 3;
-
 	image_texture()
 		: data(nullptr), width(0), height(0), bytes_per_scanline(0) {}
 
 	image_texture(const char* filename) {
-		auto components_per_pixel = bytes_per_pixel;
-
-		data = stbi_load(
-			filename, &width, &height, &components_per_pixel, components_per_pixel);
-
-		if (!data) {
+		if (!bmpLoad(filename, &data, &width, &height)) {
 			std::cerr << "ERROR: Could not load texture image file '" << filename << "'.\n";
 			width = height = 0;
 		}
 
-		bytes_per_scanline = bytes_per_pixel * width;
+		bytes_per_scanline = 3 * width;
 	}
 
 	~image_texture() {
-		STBI_FREE(data);
+		delete[] data;
 	}
 
 	virtual color value(double u, double v, const vec3& p) const override {
@@ -47,9 +40,9 @@ public:
 		if (j >= height) j = height - 1;
 
 		const auto color_scale = 1.0 / 255.0;
-		auto pixel = data + j * bytes_per_scanline + i * bytes_per_pixel;
+		auto pixel = data + j * bytes_per_scanline + i * 3;
 
-		return color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
+		return color(color_scale * pixel[2], color_scale * pixel[1], color_scale * pixel[0]);
 	}
 
 private:

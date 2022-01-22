@@ -46,7 +46,7 @@ extern "C" bool bmpLoad(const char* filePath, unsigned char** data, int* width, 
 {
 	ifstream ifs(filePath, ios::binary);
 	if (!ifs) {
-		cerr << "ファイル file.txt が開けません" << endl;
+		cerr << "failed to open file : " << filePath << endl;
 		return false;
 	}
 
