@@ -31,6 +31,7 @@
     <ClInclude Include="hittables\constant_medium.h" />
     <ClInclude Include="hittable.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="write_color.h" />
     <ClInclude Include="hittables\rotate_y.h" />
     <ClInclude Include="hittables\translate.h" />
@@ -74,6 +75,7 @@
     <ClCompile Include="hittables\moving_sphere.cpp" />
     <ClCompile Include="hittables\sphere.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="vec3.cpp" />
     <ClCompile Include="hit_record.cpp" />
     <ClCompile Include="hittables\xy_rect.cpp" />

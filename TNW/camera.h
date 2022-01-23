@@ -28,7 +28,6 @@ public:
 		double vfov, // vertical field-of-view in degrees
 		double aspect_ratio,
 		double aperture,
-		double focus_dist,
 		double _exposureTime = 0
 	) {
 		auto theta = degrees_to_radians(vfov);
@@ -37,35 +36,37 @@ public:
 		auto viewport_width = aspect_ratio * viewport_height;
 
 		auto w = unit_vector(lookfrom - lookat);
-		u = unit_vector(cross(vup, w));
-		v = cross(w, u);
+		_u = unit_vector(cross(vup, w));
+		_v = cross(w, _u);
 
-		origin = lookfrom;
-		horizontal = focus_dist * viewport_width * u;
-		vertical = focus_dist * viewport_height * v;
-		lower_left_corner = origin - horizontal / 2 - vertical / 2 - focus_dist * w;
+		auto dist_to_focus = (lookat - lookfrom).length();
+		_origin = lookfrom;
+		_horizontal = dist_to_focus * viewport_width * _u;
+		_vertical = dist_to_focus * viewport_height * _v;
+		_lower_left_corner = _origin - _horizontal / 2 - _vertical / 2 - dist_to_focus * w;
 
-		lens_radius = aperture / 2;
-		exposureTime = _exposureTime;
+		_lens_radius = aperture / 2;
+		_exposureTime = _exposureTime;
 	}
 
 	ray get_ray(double s, double t) const {
-		vec3 rd = lens_radius * random_in_unit_disk();
-		vec3 offset = u * rd.x + v * rd.y;
+		vec3 rd = _lens_radius * random_in_unit_disk();
+		vec3 offset = _u * rd.x + _v * rd.y;
 		return ray(
-			origin + offset,
-			lower_left_corner + s * horizontal + t * vertical - origin - offset,
-			random_double(-exposureTime / 2, exposureTime / 2)
+			_origin + offset,
+			_lower_left_corner + s * _horizontal + t * _vertical - _origin - offset,
+			random_double(-_exposureTime / 2, _exposureTime / 2)
 		);
 	}
 
 private:
-	vec3 origin;
-	vec3 lower_left_corner;
-	vec3 horizontal;
-	vec3 vertical;
-	vec3 u, v;
-	double lens_radius;
-	double exposureTime;
+	vec3 _origin;
+	vec3 _lower_left_corner;
+	vec3 _horizontal;
+	vec3 _vertical;
+	vec3 _u;
+	vec3 _v;
+	double _lens_radius;
+	double _exposureTime;
 };
 #endif

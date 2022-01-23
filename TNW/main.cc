@@ -38,7 +38,9 @@
 
 using namespace std;
 
-std::vector<std::shared_ptr<hittable>> random_scene() {
+#include "Scene.h"
+
+Scene* random_scene() {
 	std::vector<std::shared_ptr<hittable>> world;
 
 	auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
@@ -76,18 +78,30 @@ std::vector<std::shared_ptr<hittable>> random_scene() {
 	}
 
 	auto material1 = make_shared<dielectric>(1.5);
-	world.push_back(make_shared<sphere>(vec3(0, 1, 0), 1.0, material1));
+	world.push_back(make_shared<sphere>(vec3(0, 1, 0), 1, material1));
 
 	auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
-	world.push_back(make_shared<sphere>(vec3(-4, 1, 0), 1.0, material2));
+	world.push_back(make_shared<sphere>(vec3(-4, 1, 0), 1, material2));
 
-	auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
-	world.push_back(make_shared<sphere>(vec3(4, 1, 0), 1.0, material3));
+	auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0);
+	world.push_back(make_shared<sphere>(vec3(4, 1, 0), 1, material3));
 
-	return world;
+	auto background = color(0.7, 0.8, 1);
+
+	int image_width = 1280;
+	int image_height = 720;
+
+	auto lookfrom = vec3(13, 2, 3);
+	auto lookat = vec3(0, 0, 0);
+	auto vup = vec3(0, 1, 0);
+	auto vfov = 20;
+	auto aspect_ratio = ((double)image_width) / image_height;
+	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, 0.1, 1);
+
+	return new Scene(world, background, cam, image_width, image_height, 10);
 }
 
-std::vector<std::shared_ptr<hittable>> two_spheres() {
+Scene* two_spheres() {
 	std::vector<std::shared_ptr<hittable>> objects;
 
 	auto checker = make_shared<checker_texture>(color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
@@ -95,20 +109,44 @@ std::vector<std::shared_ptr<hittable>> two_spheres() {
 	objects.push_back(make_shared<sphere>(vec3(0, -10, 0), 10, make_shared<lambertian>(checker)));
 	objects.push_back(make_shared<sphere>(vec3(0, 10, 0), 10, make_shared<lambertian>(checker)));
 
-	return objects;
+	auto background = color(0.7, 0.8, 1);
+
+	int image_width = 1280;
+	int image_height = 720;
+
+	auto lookfrom = vec3(13, 2, 3);
+	auto lookat = vec3(0, 0, 0);
+	auto vup = vec3(0, 1, 0);
+	auto vfov = 20;
+	auto aspect_ratio = ((double)image_width) / image_height;
+	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, 0.1, 1);
+
+	return new Scene(objects, background, cam, image_width, image_height, 10);
 }
 
-std::vector<std::shared_ptr<hittable>> two_perlin_spheres() {
+Scene* two_perlin_spheres() {
 	std::vector<std::shared_ptr<hittable>> objects;
 
 	auto pertext = make_shared<noise_texture>(4);
 	objects.push_back(make_shared<sphere>(vec3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
 	objects.push_back(make_shared<sphere>(vec3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
-	return objects;
+	auto background = color(0.7, 0.8, 1);
+
+	int image_width = 1280;
+	int image_height = 720;
+
+	auto lookfrom = vec3(13, 2, 3);
+	auto lookat = vec3(0, 0, 0);
+	auto vup = vec3(0, 1, 0);
+	auto vfov = 20;
+	auto aspect_ratio = ((double)image_width) / image_height;
+	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, 0.1, 1);
+
+	return new Scene(objects, background, cam, image_width, image_height, 10);
 }
 
-std::vector<std::shared_ptr<hittable>> earth() {
+Scene* earth() {
 	std::vector<std::shared_ptr<hittable>> objects;
 
 	auto earth_texture = make_shared<image_texture>("earthmap.bmp");
@@ -116,10 +154,22 @@ std::vector<std::shared_ptr<hittable>> earth() {
 	auto globe = make_shared<sphere>(vec3(0, 0, 0), 2, earth_surface);
 	objects.push_back(globe);
 
-	return objects;
+	auto background = color(0.7, 0.8, 1);
+
+	int image_width = 1280;
+	int image_height = 720;
+
+	auto lookfrom = vec3(0, 0, 12);
+	auto lookat = vec3(0, 0, 0);
+	auto vup = vec3(0, 1, 0);
+	auto vfov = 20;
+	auto aspect_ratio = ((double)image_width) / image_height;
+	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, 0.1, 1);
+
+	return new Scene(objects, background, cam, image_width, image_height, 10);
 }
 
-std::vector<std::shared_ptr<hittable>> simple_light() {
+Scene* simple_light() {
 	std::vector<std::shared_ptr<hittable>> objects;
 
 	auto pertext = make_shared<noise_texture>(4);
@@ -130,10 +180,22 @@ std::vector<std::shared_ptr<hittable>> simple_light() {
 	objects.push_back(make_shared<sphere>(vec3(0, 7, 0), 2, difflight));
 	objects.push_back(make_shared<xy_rect>(3, 5, 1, 3, -2, difflight));
 
-	return objects;
+	auto background = color(0.7, 0.8, 1);
+
+	int image_width = 1280;
+	int image_height = 720;
+
+	auto lookfrom = vec3(26, 3, 6);
+	auto lookat = vec3(0, 2, 0);
+	auto vup = vec3(0, 1, 0);
+	auto vfov = 20;
+	auto aspect_ratio = ((double)image_width) / image_height;
+	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, 0.1, 1);
+
+	return new Scene(objects, background, cam, image_width, image_height, 400);
 }
 
-std::vector<std::shared_ptr<hittable>> cornell_box() {
+Scene* cornell_box() {
 	std::vector<std::shared_ptr<hittable>> objects;
 
 	auto red = make_shared<lambertian>(color(.65, .05, .05));
@@ -158,10 +220,22 @@ std::vector<std::shared_ptr<hittable>> cornell_box() {
 	box2 = make_shared<translate>(box2, vec3(130, 0, 65));
 	objects.push_back(box2);
 
-	return objects;
+	auto background = color(0.7, 0.8, 1);
+
+	int image_width = 600;
+	int image_height = 720;
+
+	auto lookfrom = vec3(278, 278, -800);
+	auto lookat = vec3(278, 278, 0);
+	auto vup = vec3(0, 1, 0);
+	auto vfov = 40;
+	auto aspect_ratio = ((double)image_width) / image_height;
+	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, 0.1, 1);
+
+	return new Scene(objects, background, cam, image_width, image_height, 200);
 }
 
-std::vector<std::shared_ptr<hittable>> cornell_smoke() {
+Scene* cornell_smoke() {
 	std::vector<std::shared_ptr<hittable>> objects;
 
 	auto red = make_shared<lambertian>(color(.65, .05, .05));
@@ -187,20 +261,32 @@ std::vector<std::shared_ptr<hittable>> cornell_smoke() {
 	objects.push_back(make_shared<constant_medium>(box1, 0.01, color(0, 0, 0)));
 	objects.push_back(make_shared<constant_medium>(box2, 0.01, color(1, 1, 1)));
 
-	return objects;
+	auto background = color(0.7, 0.8, 1);
+
+	int image_width = 600;
+	int image_height = 720;
+
+	auto lookfrom = vec3(278, 278, -800);
+	auto lookat = vec3(278, 278, 0);
+	auto vup = vec3(0, 1, 0);
+	auto vfov = 40;
+	auto aspect_ratio = ((double)image_width) / image_height;
+	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, 0.1, 1);
+
+	return new Scene(objects, background, cam, image_width, image_height, 200);
 }
 
-std::vector<std::shared_ptr<hittable>> final_scene() {
+Scene* final_scene() {
 	std::vector<std::shared_ptr<hittable>> objects;
 	auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
 
 	const int boxes_per_side = 20;
 	for (int i = 0; i < boxes_per_side; i++) {
 		for (int j = 0; j < boxes_per_side; j++) {
-			auto w = 100.0;
-			auto x0 = -1000.0 + i * w;
-			auto z0 = -1000.0 + j * w;
-			auto y0 = 0.0;
+			auto w = 100;
+			auto x0 = -1000 + i * w;
+			auto z0 = -1000 + j * w;
+			auto y0 = 0;
 			auto x1 = x0 + w;
 			auto y1 = random_double(1, 101);
 			auto z1 = z0 + w;
@@ -219,7 +305,7 @@ std::vector<std::shared_ptr<hittable>> final_scene() {
 
 	objects.push_back(make_shared<sphere>(vec3(260, 150, 45), 50, make_shared<dielectric>(1.5)));
 	objects.push_back(make_shared<sphere>(
-		vec3(0, 150, 145), 50, make_shared<metal>(color(0.8, 0.8, 0.9), 1.0)
+		vec3(0, 150, 145), 50, make_shared<metal>(color(0.8, 0.8, 0.9), 1)
 		));
 
 	auto boundary = make_shared<sphere>(vec3(360, 150, 145), 70, make_shared<dielectric>(1.5));
@@ -242,136 +328,72 @@ std::vector<std::shared_ptr<hittable>> final_scene() {
 		}
 		objects.push_back(make_shared<translate>(
 			make_shared<rotate_y>(
-				createBvhTree(boxes2, 1.0), 15),
+				createBvhTree(boxes2, 1), 15),
 			vec3(-100, 270, 395)
 			)
 		);
 	}
 
-	return objects;
-}
-
-static unsigned char convert(double value) {
-	return (unsigned char)(255 * std::min(value, 1.0));
-}
-
-int main() {
-
-	// Image
+	auto background = color(0, 0, 0);
 
 	int image_width = 1280;
 	int image_height = 720;
-	int samples_per_pixel = 10;
+
+	auto lookfrom = vec3(478, 278, -600);
+	auto lookat = vec3(278, 278, 0);
+	auto vup = vec3(0, 1, 0);
+	auto vfov = 40;
+	auto aspect_ratio = ((double)image_width) / image_height;
+	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, 0, 1);
+
+	//return new Scene(objects, background, cam, image_width, image_height, 100);
+	return new Scene(objects, background, cam, image_width, image_height, 10);
+}
+
+Scene* simple_scene() {
+	std::vector<std::shared_ptr<hittable>> objects;
+
+	objects.push_back(make_shared<sphere>(vec3(0, 0, 0), 1, make_shared<lambertian>(color(0.5, 0.5, 0.5))));
+
+	auto background = color(0.7, 0.8, 1);
+
+	int image_width = 1280;
+	int image_height = 720;
+
+	auto lookfrom = vec3(26, 3, 6);
+	auto lookat = vec3(0, 0, 0);
+	auto vup = vec3(0, 1, 0);
+	auto vfov = 20;
+	auto aperture = 0.1;
+	auto exposure_time = 1;
+	auto aspect_ratio = ((double)image_width) / image_height;
+	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, exposure_time);
+
+	return new Scene(objects, background, cam, image_width, image_height, 10);
+}
+
+int main() {
 	int max_depth = 50;
 
-	// World
+	//auto scene = random_scene();
+	//auto scene = two_spheres();
+	//auto scene = two_perlin_spheres();
+	//auto scene = earth();
+	//auto scene = simple_light();
+	//auto scene = cornell_box();
+	//auto scene = cornell_smoke();
+	auto scene = final_scene();
+	//auto scene = simple_scene();
 
-	std::vector<std::shared_ptr<hittable>> world;
-
-	vec3 lookfrom;
-	vec3 lookat;
-	auto vfov = 40.0;
-	auto aperture = 0.0;
-	color background(0, 0, 0);
-
-	switch (8) {
-	case 1:
-		world = random_scene();
-		background = color(0.70, 0.80, 1.00);
-		lookfrom = vec3(13, 2, 3);
-		lookat = vec3(0, 0, 0);
-		vfov = 20.0;
-		aperture = 0.1;
-		break;
-
-	case 2:
-		world = two_spheres();
-		background = color(0.70, 0.80, 1.00);
-		lookfrom = vec3(13, 2, 3);
-		lookat = vec3(0, 0, 0);
-		vfov = 20.0;
-		break;
-
-	case 3:
-		world = two_perlin_spheres();
-		background = color(0.70, 0.80, 1.00);
-		lookfrom = vec3(13, 2, 3);
-		lookat = vec3(0, 0, 0);
-		vfov = 20.0;
-		break;
-
-	case 4:
-		world = earth();
-		background = color(0.70, 0.80, 1.00);
-		lookfrom = vec3(0, 0, 12);
-		lookat = vec3(0, 0, 0);
-		vfov = 20.0;
-		break;
-
-	case 5:
-		world = simple_light();
-		samples_per_pixel = 400;
-		lookfrom = vec3(26, 3, 6);
-		lookat = vec3(0, 2, 0);
-		vfov = 20.0;
-		break;
-
-	default:
-	case 6:
-		world = cornell_box();
-		image_width = 600;
-		samples_per_pixel = 200;
-		lookfrom = vec3(278, 278, -800);
-		lookat = vec3(278, 278, 0);
-		vfov = 40.0;
-		break;
-
-	case 7:
-		world = cornell_smoke();
-		image_width = 600;
-		samples_per_pixel = 200;
-		lookfrom = vec3(278, 278, -800);
-		lookat = vec3(278, 278, 0);
-		vfov = 40.0;
-		break;
-
-	case 8:
-		world = final_scene();
-#if true
-		image_width = 1280;
-		image_height = 720;
-#else
-		image_width = 320;
-		image_height = 180;
-#endif
-#if false
-		samples_per_pixel = 100;
-#else
-		samples_per_pixel = 10;
-#endif
-		lookfrom = vec3(478, 278, -600);
-		lookat = vec3(278, 278, 0);
-		vfov = 40.0;
-		break;
-	}
-
-	auto bvh_world = createBvhTree(world, 1.0);
+	auto bvh_world = createBvhTree(scene->_world, 1.0);
 	bvh_world->print();
 
-	// Camera
-
-	const vec3 vup(0, 1, 0);
-	auto dist_to_focus = (lookat - lookfrom).length();
-
-	auto aspect_ratio = ((double)image_width) / image_height;
-	camera cam(lookfrom, lookat, vup, vfov, aspect_ratio, aperture, dist_to_focus, 1.0);
-
 	// Render
-	Renderer renderer(50, samples_per_pixel);
+	Renderer renderer(max_depth, scene->_samples_per_pixel);
 	renderer.setWorld(bvh_world.get());
-	renderer.setBackground(background);
-	auto image = renderer.render(cam, image_width, image_height);
-	bmpSave("scene.bmp", image, image_width, image_height);
+	renderer.setBackground(scene->_backgroundColor);
+	auto image = renderer.render(scene->_camera, scene->_image_width, scene->_image_height);
+	bmpSave("scene.bmp", image, scene->_image_width, scene->_image_height);
 	delete[] image;
 	std::cerr << "hit enter to exit." << std::endl;
 	std::cin.get();

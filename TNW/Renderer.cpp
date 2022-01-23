@@ -31,7 +31,7 @@ color Renderer::ray_color(const ray& r, int depth) {
 }
 
 static unsigned char convert(double value) {
-	return (unsigned char)(255 * std::min(value, 1.0));
+	return (unsigned char)(255 * std::min(sqrt(value), 1.0) + 0.5);
 }
 
 unsigned char* Renderer::render(const camera& camera, int image_width, int image_height)
@@ -44,7 +44,7 @@ unsigned char* Renderer::render(const camera& camera, int image_width, int image
 			double red = 0;
 			double green = 0;
 			double blue = 0;
-#pragma omp parallel for
+			//#pragma omp parallel for
 			for (int s = 0; s < samplesPerPixel; ++s) {
 				auto u = (i + random_double()) / (image_width - 1);
 				auto v = (j + random_double()) / (image_height - 1);
@@ -54,11 +54,10 @@ unsigned char* Renderer::render(const camera& camera, int image_width, int image
 				green += c.g;
 				blue += c.b;
 			}
-			color pixel_color(red / samplesPerPixel, green / samplesPerPixel, blue / samplesPerPixel);
 			auto index = 3 * image_width * (image_height - 1 - j) + 3 * i;
-			image[index] = convert(pixel_color.b);
-			image[index + 1] = convert(pixel_color.g);
-			image[index + 2] = convert(pixel_color.r);
+			image[index] = convert(blue / samplesPerPixel);
+			image[index + 1] = convert(green / samplesPerPixel);
+			image[index + 2] = convert(red / samplesPerPixel);
 		}
 	}
 	auto end = std::chrono::system_clock::now();
