@@ -1,9 +1,19 @@
 #include "random_utils.h"
 
+#if false
+// 下の乱数生成器も、マルチコア非対応だった。生成される画像の品質が向上するということもなかった。
+#include <random>
+static std::mt19937 engine;
+double random_double() {
+	// Returns a random real in [0,1).
+	return engine() / (UINT32_MAX + 1.0);
+}
+#else
 double random_double() {
 	// Returns a random real in [0,1).
 	return rand() / (RAND_MAX + 1.0);
 }
+#endif
 
 double random_double(double min, double max) {
 	// Returns a random real in [min,max).

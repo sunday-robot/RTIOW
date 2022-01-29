@@ -28,7 +28,7 @@ public:
 		double vfov, // vertical field-of-view in degrees
 		double aspect_ratio,
 		double aperture,
-		double _exposureTime = 0
+		double exposureTime = 0
 	) {
 		auto theta = degrees_to_radians(vfov);
 		auto h = tan(theta / 2);
@@ -46,7 +46,7 @@ public:
 		_lower_left_corner = _origin - _horizontal / 2 - _vertical / 2 - dist_to_focus * w;
 
 		_lens_radius = aperture / 2;
-		_exposureTime = _exposureTime;
+		_exposureTime = exposureTime;
 	}
 
 	ray get_ray(double s, double t) const {

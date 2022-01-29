@@ -44,6 +44,7 @@ unsigned char* Renderer::render(const camera& camera, int image_width, int image
 			double red = 0;
 			double green = 0;
 			double blue = 0;
+			// 下のpragmaで、高速化はされるが、乱数生成器が並列処理に対応していないようで、画像の品質が悪くなってしまう。(rand()ではなく、mt19937に変えても同じ傾向だった。）
 			//#pragma omp parallel for
 			for (int s = 0; s < samplesPerPixel; ++s) {
 				auto u = (i + random_double()) / (image_width - 1);
